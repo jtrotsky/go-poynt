@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jtrotsky/go-poynt/poyntcloud"
 	"github.com/jtrotsky/go-poynt/poyntcloud/config"
 )

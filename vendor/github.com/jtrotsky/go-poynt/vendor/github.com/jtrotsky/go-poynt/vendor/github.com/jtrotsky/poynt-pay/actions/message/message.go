@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jtrotsky/go-poynt/poyntcloud"
-	"github.com/jtrotsky/go-poynt/poyntcloud/auth"
-	"github.com/jtrotsky/go-poynt/poyntcloud/config"
+	"github.com/jtrotsky/poynt-pay/manager"
+	"github.com/jtrotsky/poynt-pay/poyntcloud/auth"
+	"github.com/jtrotsky/poynt-pay/poyntcloud/config"
 )
 
 // Message contains message body content of a CloudMessage post
@@ -102,7 +102,7 @@ func SendCloudMessage(config *config.Configuration, creds *auth.OAuthCreds,
 	// Create UUID for requestID
 	requestID := poyntcloud.GenerateReferenceID()
 	req.Header.Set("Poynt-Request-Id", requestID)
-	req.Header.Set("User-Agent", "go-poynt")
+	req.Header.Set("User-Agent", "Poynt-Pay")
 
 	// NOTE: for debug
 	fmt.Printf("\n\nREQUEST ID: %s", requestID)

@@ -10,8 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jtrotsky/go-poynt/poyntcloud"
-	"github.com/jtrotsky/go-poynt/poyntcloud/config"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/jtrotsky/poynt-pay/poyntcloud"
+	"github.com/jtrotsky/poynt-pay/poyntcloud/config"
 )
 
 // GetAuth gets OAuth credentials using configuration
@@ -122,7 +123,7 @@ func authRequest(params url.Values, config *config.Configuration) ([]byte, int, 
 	// Create UUID for requestID
 	requestID := poyntcloud.GenerateReferenceID()
 	req.Header.Set("Poynt-Request-Id", requestID)
-	req.Header.Set("User-Agent", "go-poynt")
+	req.Header.Set("User-Agent", "Poynt-Pay")
 
 	client := &http.Client{}
 	fmt.Println("Requesting access token from POYNT")
@@ -186,7 +187,7 @@ func BuildOAuthURL(config *config.Configuration) string {
 	query := url.Values{}
 	query.Add("callback", fmt.Sprintf("%s", "https://736ed89f.ngrok.com/callback"))
 	query.Add("applicationId", fmt.Sprintf("%s", config.ApplicationID))
-	// query.Add("context", fmt.Sprintf("%s", "go-poynt"))
+	// query.Add("context", fmt.Sprintf("%s", "poynt-pay"))
 
 	address += fmt.Sprintf("%sauthorize?%s", baseURL, query.Encode())
 	return address

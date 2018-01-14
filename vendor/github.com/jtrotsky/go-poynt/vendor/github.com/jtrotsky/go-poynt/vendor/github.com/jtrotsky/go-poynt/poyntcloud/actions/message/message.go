@@ -7,12 +7,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"time"
 
-	"github.com/jtrotsky/go-poynt/poyntcloud"
-	"github.com/jtrotsky/go-poynt/poyntcloud/auth"
-	"github.com/jtrotsky/go-poynt/poyntcloud/config"
+	"github.com/jtrotsky/poynt-pay/poyntcloud"
+	"github.com/jtrotsky/poynt-pay/poyntcloud/auth"
+	"github.com/jtrotsky/poynt-pay/poyntcloud/config"
 )
 
 // Message contains message body content of a CloudMessage post
@@ -45,34 +44,30 @@ type Payment struct {
 // SendCloudMessage sends a message to the POYNT cloud which passes that message
 // on to an application running on the POYNT device.
 func SendCloudMessage(config *config.Configuration, creds *auth.OAuthCreds,
-	paymentAmount string) error {
+	paymentAmount float64, referenceID string) error {
 
-	// First check if we expect an expired token.
+	// Check if auth token is expired.
 	if creds.Expiry.IsZero() && creds.Expiry.Unix() < time.Now().Unix() {
 		fmt.Println("Token Expired")
-		return errors.New("Token expired.")
+		return errors.New("Token Expired.")
 	}
 
-	// Convert amount string to float64
-	paymentAmountFloat, err := strconv.ParseFloat(paymentAmount, 64)
-	if err != nil {
-		fmt.Println("error converting payment amount string to number:", err)
-	}
-
-	// Create UUID for payment referenceID
-	referenceID := poyntcloud.GenerateReferenceID()
 	var paymentData = Payment{
 		Action:  "sale",
-		IsDebit: true,
+		IsDebit: true, // TODO: Should be debit or credit? Or optional?
 		// Convert amounts to int as only Java long accepted. Last two digits are
 		// assumed to be cents, hence * 100.
-		PurchaseAmount: int64(paymentAmountFloat * 100),
+		PurchaseAmount: int64(paymentAmount * 100),
 		TipAmount:      0, // We don't tip in New Zealand.
 		// TipAmount:      int64(paymentAmountFloat * 0.20),
-		CurrencyCode: "NZD",
-		ReferenceID:  referenceID,
-		OrderID:      "test-order-from-joe",
-		CallBackURL:  "https://736ed89f.ngrok.com/callback",
+		CurrencyCode: "NZD",       // TODO: Should be USD.
+		ReferenceID:  referenceID, // ReferenceID generated for each transaction.
+		// Need to use saleID.
+		// Will not have this when Weggie starts generating it server-side.
+		// Could use register_id, but that would not be changing per transaction.
+		// Could combine register_id with another changing param.
+		OrderID:     "test-order-123",
+		CallBackURL: "https://736ed89f.ngrok.com/callback",
 	}
 	paymentDataJSON, err := json.Marshal(&paymentData)
 	if err != nil {
@@ -82,7 +77,7 @@ func SendCloudMessage(config *config.Configuration, creds *auth.OAuthCreds,
 
 	cloudMessage := &Message{
 		BusinessID:        config.BusinessID,
-		MessageExpiryTime: 30, // 30 second timeout.
+		MessageExpiryTime: 30, // TODO: Tested this, didn't work. Need to figure out.
 		Data:              data.String(),
 	}
 
@@ -97,12 +92,13 @@ func SendCloudMessage(config *config.Configuration, creds *auth.OAuthCreds,
 	fmt.Printf("MESSAGE:\n %s", messagePayload)
 
 	req, err := http.NewRequest("POST", cloudMessageURL, bytes.NewBuffer(messagePayload))
+	// TODO: clean up headers
 	req.Header.Set("Authorization", creds.TokenType+" "+creds.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 	// Create UUID for requestID
 	requestID := poyntcloud.GenerateReferenceID()
 	req.Header.Set("Poynt-Request-Id", requestID)
-	req.Header.Set("User-Agent", "go-poynt")
+	req.Header.Set("User-Agent", "Go-Poynt")
 
 	// NOTE: for debug
 	fmt.Printf("\n\nREQUEST ID: %s", requestID)
