@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jtrotsky/poynt-pay/poyntcloud"
-	"github.com/jtrotsky/poynt-pay/poyntcloud/auth"
-	"github.com/jtrotsky/poynt-pay/poyntcloud/config"
+	"github.com/jtrotsky/go-poynt/poyntcloud"
+	"github.com/jtrotsky/go-poynt/poyntcloud/auth"
+	"github.com/jtrotsky/go-poynt/poyntcloud/config"
 )
 
 // Message contains message body content of a CloudMessage post

@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jtrotsky/go-poynt/poyntcloud"
 	"github.com/jtrotsky/go-poynt/poyntcloud/config"
 )
@@ -142,16 +143,17 @@ func authRequest(params url.Values, config *config.Configuration) ([]byte, int, 
 func genJWTToken(config *config.Configuration) (string, error) {
 	// Create JWT token
 	token := jwt.New(jwt.SigningMethodRS256)
+	claims := token.Claims.(jwt.MapClaims)
 
 	// Set some default claims
-	token.Claims["iss"] = config.ApplicationID   // Issuer
-	token.Claims["sub"] = config.ApplicationID   // Subject
-	token.Claims["aud"] = config.PoyntAPIHostURL // Audience
-	token.Claims["exp"] = (fiveMinutesFromNow()) // Expiry time
-	token.Claims["iat"] = time.Now().Unix()      // Time JWT issued
+	claims["iss"] = config.ApplicationID   // Issuer
+	claims["sub"] = config.ApplicationID   // Subject
+	claims["aud"] = config.PoyntAPIHostURL // Audience
+	claims["exp"] = (fiveMinutesFromNow()) // Expiry time
+	claims["iat"] = time.Now().Unix()      // Time JWT issued
 	// Create UUID for request reference
 	referenceID := poyntcloud.GenerateReferenceID()
-	token.Claims["jti"] = referenceID // Unique ID.
+	claims["jti"] = referenceID // Unique ID.
 
 	// Read private key from config file
 	mySigningKey, err := ioutil.ReadFile(config.PrivateKeyFile)

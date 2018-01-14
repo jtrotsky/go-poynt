@@ -122,7 +122,7 @@ func authRequest(params url.Values, config *config.Configuration) ([]byte, int, 
 	// Create UUID for requestID
 	requestID := poyntcloud.GenerateReferenceID()
 	req.Header.Set("Poynt-Request-Id", requestID)
-	req.Header.Set("User-Agent", "Poynt-Pay")
+	req.Header.Set("User-Agent", "go-poynt")
 
 	client := &http.Client{}
 	fmt.Println("Requesting access token from POYNT")
