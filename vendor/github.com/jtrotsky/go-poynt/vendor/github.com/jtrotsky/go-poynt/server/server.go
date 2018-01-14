@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jtrotsky/go-poynt/auth"
+	"github.com/jtrotsky/go-poynt/poyntcloud/auth"
 	"github.com/jtrotsky/go-poynt/poyntcloud/config"
 )
 

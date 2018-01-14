@@ -1,4 +1,4 @@
-package poyntcloud
+package message
 
 import (
 	"bytes"

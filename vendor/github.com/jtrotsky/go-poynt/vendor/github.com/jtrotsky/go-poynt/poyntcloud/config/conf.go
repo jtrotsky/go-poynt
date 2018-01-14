@@ -1,4 +1,4 @@
-package poyntcloud
+package config
 
 import (
 	"encoding/json"
