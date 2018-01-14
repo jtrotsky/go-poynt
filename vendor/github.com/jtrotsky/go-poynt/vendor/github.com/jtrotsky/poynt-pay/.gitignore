@@ -1,0 +1,24 @@
+# Application binary
+poynt-pay
+
+# Hidden files
+.DS_Store
+
+# Junk files
+*.csv
+*.log
+*.txt
+*.json
+
+# Junk folders
+app-builds/*
+junk/*
+
+# Feature definitions
+features/*
+
+# Sensitive info
+poyntcloud/auth/keys/*
+
+# Config files
+poyntcloud/config/conf.json

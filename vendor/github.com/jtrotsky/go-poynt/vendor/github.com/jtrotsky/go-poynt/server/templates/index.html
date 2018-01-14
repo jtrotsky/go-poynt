@@ -1,0 +1,73 @@
+<!-- Author: Joe Armstrong -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Go Poynt</title>
+
+    <!-- Import our style sheet. -->
+    <link rel="stylesheet" type="text/css" href="server/assets/css/app.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script>
+    $(document).ajaxStart(function(){
+      $('#loader').show();
+    }).ajaxStop(function(){
+      $('#loader').hide();
+    });
+    </script>
+</head>
+
+<header class="app-header clear" role="banner">
+  <a href="localhost:8000">Go Poynt</a>
+</header>
+
+<section>
+<label class="header-label">Amount
+  <input id="amount-input-box" type="text" name="payment"
+  placeholder="0.00"
+  onfocus="this.placeholder = ''"
+  onblur="this.placeholder = '0.00'">
+  </input>
+</label>
+
+<script>
+$(document).ready(function() {
+  $("#button-primary").bind("click", function() {
+    input=$('#amount-input-box').val()
+    if (checkInput(input)) {
+      return false;
+    };
+    sendPayment();
+  })
+})
+function sendPayment() {
+  var value = $('#amount-input-box').val().replace(",", "")
+  $.ajax({
+    url: "pay",
+    type: "GET",
+    data: { amount: value }
+  });
+}
+function checkInput(input) {
+  var regex=/^[0-9]\d*(((,\d{3}){1})?(\.\d{0,4})?)$/;
+  if (input.match(regex)) {
+    return false;
+  } else {
+    alert("Must input numbers");
+    return true;
+  }}
+</script>
+
+<div id="button-primary" type="submit" value="Send">SEND</div>
+<div class="ease"></div>
+    <div id="loader" class="vd-modal-container" style="display:none">
+        <div class="vd-modal-content">
+          <div class="vd-modal-loader-container">
+            <div class="vd-modal-loader"></div>
+          </div>
+        </div>
+    </div>
+</section>
+
+</html>
