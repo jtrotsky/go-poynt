@@ -1,0 +1,16 @@
+hash: 334fdb8f17e70aa0898d56ef93472716801619ff136bf8d9f03268a2b33c21df
+updated: 2018-01-14T13:14:09.548331+13:00
+imports:
+- name: github.com/dgrijalva/jwt-go
+  version: dbeaa9332f19a944acb5736b4456cfcc02140e29
+- name: github.com/google/uuid
+  version: 064e2069ce9c359c118179501254f67d7d37ba24
+- name: github.com/jtrotsky/go-poynt
+  version: 988814268967ac69db5ff6f2da73cd90125680b9
+  subpackages:
+  - poyntcloud
+  - poyntcloud/actions/message
+  - poyntcloud/auth
+  - poyntcloud/config
+  - server
+testImports: []

@@ -1,0 +1,13 @@
+package: .
+import:
+- package: github.com/dgrijalva/jwt-go
+  version: ~3.1.0
+- package: github.com/google/uuid
+  version: ~0.2.0
+- package: github.com/jtrotsky/go-poynt
+  subpackages:
+  - poyntcloud
+  - poyntcloud/actions/message
+  - poyntcloud/auth
+  - poyntcloud/config
+  - server
